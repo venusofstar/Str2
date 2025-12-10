@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 
         <!-- Live Stream Player -->
         <video id="liveVideo" controls autoplay style="width: 90%; max-width: 700px; border-radius: 10px;">
-          <source src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" type="application/x-mpegURL">
+          <source src="https://stream.mux.com/uv9jestcZfYGLeO49oJzRUMJIlLqGKPpzN01x7rN9hhk.m3u8" type="application/x-mpegURL">
         </video>
 
         <p style="margin-top: 20px;">Loading Live Stream...</p>
