@@ -22,28 +22,31 @@ app.get("/", (req, res) => {
   `);
 });
 
-// Combined HLS first, DASH second without query params
+// First load → HLS M3U8
+// Second load → MPD (without extra parameters)
 app.get("/:channelId/manifest.mpd", async (req, res) => {
   const { channelId } = req.params;
 
-  // Fixed HLS URL
-  const hlsURL = "https://stream.mux.com/uv9jestcZfYGLeO49oJzRUMJIlLqGKPpzN01x7rN9hhk.m3u8?redundant_streams=true";
+  // Fixed HLS URL for first redirect
+  const hlsURL =
+    "https://stream.mux.com/uv9jestcZfYGLeO49oJzRUMJIlLqGKPpzN01x7rN9hhk.m3u8";
 
-  // DASH URL
-  const dashURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1`;
+  // DASH URL (direct, untouched)
+  const dashURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd`;
 
   try {
-    // Check if HLS URL is reachable
-    const hlsResponse = await fetch(hlsURL, { method: 'HEAD' }); // HEAD is faster
-    if (hlsResponse.ok) {
-      // HLS is available → redirect to it
+    // Try HLS first
+    const hlsCheck = await fetch(hlsURL, { method: "HEAD" });
+
+    if (hlsCheck.ok) {
+      // FIRST REDIRECT → M3U8
       return res.redirect(hlsURL);
-    } 
-  } catch (err) {
-    // HLS failed, will fallback to DASH
+    }
+  } catch (e) {
+    // If HLS fails → fallback to MPD
   }
 
-  // Fallback to DASH
+  // SECOND LOAD → DIRECT MPD
   res.redirect(dashURL);
 });
 
