@@ -32,7 +32,7 @@ app.get("/:channelId/manifest.mpd", async (req, res) => {
     "https://stream.mux.com/uv9jestcZfYGLeO49oJzRUMJIlLqGKPpzN01x7rN9hhk.m3u8";
 
   // DASH URL (direct, untouched)
-  const dashURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd`;
+  const dashURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1&nocache=1&ts=20251211`;
 
   try {
     // Try HLS first
