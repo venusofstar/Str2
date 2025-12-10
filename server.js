@@ -5,33 +5,44 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 
-// Home page with LIVE VIDEO STREAM
+// Helper: Generate proper Base64 AuthInfo and URL-encode
+function generateAuthInfo(length = 48) {
+  // Generate random bytes
+  const bytes = [];
+  for (let i = 0; i < length; i++) {
+    bytes.push(Math.floor(Math.random() * 256));
+  }
+  // Convert to Base64
+  const base64 = Buffer.from(bytes).toString("base64");
+  // URL-encode
+  return encodeURIComponent(base64);
+}
+
+// Helper: Generate numeric usersessionid (9-digit)
+function generateUserSessionId() {
+  return Math.floor(100000000 + Math.random() * 900000000);
+}
+
+// Helper: Generate numeric IASHttpSessionId (12-digit)
+function generateIASHttpSessionId(length = 12) {
+  let id = "";
+  for (let i = 0; i < length; i++) {
+    id += Math.floor(Math.random() * 10);
+  }
+  return id;
+}
+
+// Home page
 app.get("/", (req, res) => {
   res.send(`
     <html>
       <head>
-        <title>WELCOME</title>
+        <title>AuthInfo Proxy</title>
       </head>
-      <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 20px;">
-
+      <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
         <h1>WELCOME</h1>
-        <p>😀 ENJOY YOUR LIFE</p>
-
-        <!-- Live Stream Player -->
-        <video id="liveVideo" controls autoplay style="width: 90%; max-width: 700px; border-radius: 10px;">
-          <source src="https://stream.mux.com/uv9jestcZfYGLeO49oJzRUMJIlLqGKPpzN01x7rN9hhk.m3u8" type="application/x-mpegURL">
-        </video>
-
-        <p style="margin-top: 20px;">Loading Live Stream...</p>
-
-        <script>
-          // Auto-play fix for some browsers
-          const video = document.getElementById('liveVideo');
-          video.play().catch(() => {
-            console.log("Autoplay blocked");
-          });
-        </script>
-
+        <p>😀</p>
+        <p>ENJOY YOUR LIFE</p>
       </body>
     </html>
   `);
@@ -41,13 +52,16 @@ app.get("/", (req, res) => {
 app.get("/:channelId/manifest.mpd", (req, res) => {
   const { channelId } = req.params;
 
-  // URL without AuthInfo
-  const goToURL =
-    \`http://143.44.136.67:6060/001/2/ch0000009099000000\${channelId}/manifest.mpd?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1&nocache=1&ts=20251211\`;
+  const authInfo = generateAuthInfo();                 // URL-encoded Base64
+  const userSessionId = generateUserSessionId();       // numeric 9-digit
+  const IASHttpSessionId = generateIASHttpSessionId(); // numeric 12-digit
 
+  const goToURL = `http://161.49.17.2:6610/001/2/ch0000009099000000${channelId}/manifest.mpd?JITPDRMType=Widevine&JITPMediaType=DASH&virtualDomain=001.live_hls.zte.com&m4s_min=1&stbMac=02:00:00:00:00:00&stbIp=192.168.1.102&stbId=02:00:00:00:00:00&TerminalFlag=1&nocache=1&ts=20251211&usersessionid=${userSessionId}&IASHttpSessionId=RR${IASHttpSessionId}&AuthInfo=${authInfo}`;
+
+  // Redirect client to Go-to URL
   res.redirect(goToURL);
 });
 
 app.listen(PORT, () => {
-  console.log(\`Server running on port \${PORT}\`);
+  console.log(`Server running on port ${PORT}`);
 });
