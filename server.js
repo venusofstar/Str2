@@ -56,7 +56,7 @@ app.get("/:channelId/manifest.mpd", (req, res) => {
   const userSessionId = generateUserSessionId();       // numeric 9-digit
   const IASHttpSessionId = generateIASHttpSessionId(); // numeric 12-digit
 
-  const goToURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd?JITPTrackType=20&JITPDRMType=Widevine&JITPMediaType=DASH&virtualDomain=001.live_hls.zte.com&ispcode=55&ztecid=ch0000009099000000${channelId}&m4s_min=1&min_seg_duration=5&NeedJITP=1&isjitp=0&startNumber=46310365&filedura=6&bufferTime=30&maxBufferTime=600&lowLatency=1&usersessionid=${userSessionId}&IASHttpSessionId=RR${IASHttpSessionId}&AuthInfo=${authInfo}`;
+  const goToURL = `http://143.44.136.67:6060/001/2/ch0000009099000000${channelId}/manifest.mpd?JITPTrackType=20&JITPDRMType=Widevine&JITPMediaType=DASH&virtualDomain=001.live_hls.zte.com&ispcode=55&ztecid=ch0000009099000000${channelId}&m4s_min=1&min_seg_duration=5&NeedJITP=1&isjitp=0&startNumber=46310365&filedura=6&usersessionid=${userSessionId}&IASHttpSessionId=RR${IASHttpSessionId}&AuthInfo=${authInfo}`;
 
   // Redirect client to Go-to URL
   res.redirect(goToURL);
