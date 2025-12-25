@@ -1,41 +1,80 @@
-import express from "express";
+const express = require("express");
+const cors = require("cors");
+const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-/**
- * Preloaded streams
- */
-const streams = {
-  kapamilya:
-    "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1765826181/ei/JQpAaYenG67H0-kP37Ct-Ag/ip/126.209.53.186/id/rc4KfaBrGIc.1/source/yt_live_broadcast/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/file/index.m3u8",
+app.use(cors());
 
-  gma:
-    "https://manifest.googlevideo.com/api/manifest/hls_variant/expire/1765809651/ei/k8k_abjZJYaq2roPkpPvuQ0/ip/180.190.223.161/id/n0q7qAEljA8.1/source/yt_live_broadcast/requiressl/yes/xpc/EgVo2aDSNQ%3D%3D/file/index.m3u8"
-};
+// =========================
+// ROTATING ORIGIN SERVERS
+// =========================
+const ORIGINS = [
+  "http://136.239.158.18:6610",
+  "http://136.239.158.20:6610",
+  "http://136.239.158.30:6610",
+  "http://136.239.173.3:6610",
+  "http://136.158.97.2:6610",
+  "http://136.239.173.10:6610",
+  "http://136.239.158.10:6610",
+  "http://136.239.159.20:6610"
+];
 
-/**
- * IMPORTANT: exact route
- */
-app.get("/:id/index.m3u8", (req, res) => {
-  const id = req.params.id;
+let index = 0;
 
-  console.log("Requested:", id);
+// Get next origin (round-robin)
+function getNextOrigin() {
+  const origin = ORIGINS[index];
+  index = (index + 1) % ORIGINS.length;
+  return origin;
+}
 
-  if (!streams[id]) {
-    return res.status(404).send("Stream not found");
-  }
-
-  return res.redirect(streams[id]);
+// =========================
+// HOME
+// =========================
+app.get("/", (req, res) => {
+  res.send("ROTATING MPD PROXY RUNNING");
 });
 
-/**
- * Root test
- */
-app.get("/", (req, res) => {
-  res.send("OK – M3U8 Router Running");
+// =========================
+// MPD PROXY WITH ROTATION
+// =========================
+app.get("/:channelId/manifest.mpd", async (req, res) => {
+  const { channelId } = req.params;
+
+  const origin = getNextOrigin();
+
+  const targetURL =
+    `${origin}/001/2/ch0000009099000000${channelId}/manifest.mpd` +
+    `?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1`;
+
+  console.log("➡️ Using origin:", origin);
+
+  try {
+    const response = await fetch(targetURL, {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "*/*",
+        "Origin": origin,
+        "Referer": origin + "/"
+      }
+    });
+
+    if (!response.ok) {
+      return res.status(502).send("Origin fetch failed");
+    }
+
+    res.set("Content-Type", "application/dash+xml");
+    res.set("Access-Control-Allow-Origin", "*");
+
+    response.body.pipe(res);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Proxy error");
+  }
 });
 
 app.listen(PORT, () => {
-  console.log("Server running on", PORT);
+  console.log(`✅ Rotating proxy running on port ${PORT}`);
 });
