@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const fetch = require("node-fetch");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -8,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 // =========================
-// ROTATING ORIGIN SERVERS
+// ROTATING ORIGINS
 // =========================
 const ORIGINS = [
   "http://136.239.158.18:6610",
@@ -22,27 +21,24 @@ const ORIGINS = [
 ];
 
 let index = 0;
-
-// Get next origin (round-robin)
-function getNextOrigin() {
+const getNextOrigin = () => {
   const origin = ORIGINS[index];
   index = (index + 1) % ORIGINS.length;
   return origin;
-}
+};
 
 // =========================
 // HOME
 // =========================
 app.get("/", (req, res) => {
-  res.send("ROTATING MPD PROXY RUNNING");
+  res.send("✅ ROTATING MPD PROXY RUNNING");
 });
 
 // =========================
-// MPD PROXY WITH ROTATION
+// MPD PROXY
 // =========================
 app.get("/:channelId/manifest.mpd", async (req, res) => {
   const { channelId } = req.params;
-
   const origin = getNextOrigin();
 
   const targetURL =
@@ -65,8 +61,8 @@ app.get("/:channelId/manifest.mpd", async (req, res) => {
       return res.status(502).send("Origin fetch failed");
     }
 
-    res.set("Content-Type", "application/dash+xml");
-    res.set("Access-Control-Allow-Origin", "*");
+    res.setHeader("Content-Type", "application/dash+xml");
+    res.setHeader("Access-Control-Allow-Origin", "*");
 
     response.body.pipe(res);
   } catch (err) {
@@ -76,5 +72,5 @@ app.get("/:channelId/manifest.mpd", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ Rotating proxy running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
