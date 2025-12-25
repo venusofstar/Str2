@@ -1,25 +1,21 @@
 {
   "name": "authinfo-proxy",
   "version": "1.0.0",
-  "description": "Proxy server to generate AuthInfo and redirect to DASH manifests",
-  "main": "index.js",
+  "description": "Simple IPTV manifest proxy",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "node server.js"
   },
   "keywords": [
-    "express",
     "proxy",
-    "dash",
-    "hls"
+    "iptv",
+    "manifest",
+    "mpd"
   ],
-  "author": "Your Name",
+  "author": "Saver",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
   }
 }
