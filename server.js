@@ -7,13 +7,14 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 // =========================
-// ORIGIN ROTATION (ORIGINAL)
+// ORIGIN ROTATION (FAST)
 // =========================
 const ORIGINS = [
   "http://136.239.158.18:6610",
   "http://136.239.158.20:6610",
   "http://136.239.158.30:6610",
   "http://136.239.173.3:6610",
+  "http://136.158.97.2:6610",
   "http://136.158.97.2:6610",
   "http://136.239.173.10:6610",
   "http://136.239.158.10:6610",
@@ -28,21 +29,20 @@ function getOrigin() {
 }
 
 // =========================
-// ONLY PARAM ROTATION
+// FAST PARAM ROTATION
 // =========================
-let startNumber = 46489952;
-
 function rotateStartNumber() {
-  startNumber += 6; // filedura=6
-  return startNumber;
+  const base = 46489952;
+  const step = 6;
+  return base + Math.floor(Math.random() * 100000) * step;
 }
 
 function rotateIAS() {
-  return "RR" + Date.now() + Math.floor(Math.random() * 10000);
+  return "RR" + Date.now() + Math.random().toString(36).slice(2, 10);
 }
 
 function rotateUserSession() {
-  return Math.floor(100000000 + Math.random() * 900000000);
+  return Math.floor(Math.random() * 1e15).toString();
 }
 
 // =========================
@@ -88,12 +88,12 @@ app.get("/4/:channelId", (req, res) => {
     `);
   }
 
-  // OTT apps: go to MPD
+  // OTT apps: redirect to MPD
   res.redirect(`/${channelId}/manifest.mpd`);
 });
 
 // =========================
-// MPD REDIRECT (PARAMS ROTATE)
+// MPD REDIRECT (ALL FAST ROTATION)
 // =========================
 app.get("/:channelId/manifest.mpd", (req, res) => {
   const { channelId } = req.params;
