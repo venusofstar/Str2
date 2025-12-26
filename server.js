@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 // =========================
-// ROTATION (ONLY CHANGE)
+// ROTATION (ORIGINAL)
 // =========================
 const ORIGINS = [
   "http://136.239.158.18:6610",
@@ -28,6 +28,24 @@ function getOrigin() {
 }
 
 // =========================
+// ONLY THIS IS NEW (PARAM ROTATION)
+// =========================
+let startNumber = 46489952;
+
+function rotateStartNumber() {
+  startNumber += 6; // filedura=6
+  return startNumber;
+}
+
+function rotateIAS() {
+  return "RR" + Date.now() + Math.floor(Math.random() * 10000);
+}
+
+function rotateUserSession() {
+  return Math.floor(100000000 + Math.random() * 900000000);
+}
+
+// =========================
 // HOME PAGE
 // =========================
 app.get("/", (req, res) => {
@@ -44,7 +62,7 @@ app.get("/", (req, res) => {
 });
 
 // =========================
-// ORIGINAL REDIRECT (ROTATED)
+// ORIGINAL REDIRECT (ONLY PARAMS ROTATE)
 // =========================
 app.get("/:channelId/manifest.mpd", (req, res) => {
   const { channelId } = req.params;
@@ -53,10 +71,18 @@ app.get("/:channelId/manifest.mpd", (req, res) => {
 
   const goToURL =
     `${origin}/001/2/ch0000009099000000${channelId}/manifest.mpd` +
-    `?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1&NeedJITP=1&isjitp=0&startNumber=46489952&filedura=6&ispcode=55&IASHttpSessionId=RR20449520251213154029994744&usersessionid=739449684`;
+    `?JITPDRMType=Widevine` +
+    `&virtualDomain=001.live_hls.zte.com` +
+    `&m4s_min=1` +
+    `&NeedJITP=1` +
+    `&isjitp=0` +
+    `&startNumber=${rotateStartNumber()}` +
+    `&filedura=6` +
+    `&ispcode=55` +
+    `&IASHttpSessionId=${rotateIAS()}` +
+    `&usersessionid=${rotateUserSession()}`;
 
   console.log("➡️ Redirecting to:", goToURL);
-
   res.redirect(goToURL);
 });
 
