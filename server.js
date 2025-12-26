@@ -53,7 +53,7 @@ app.get("/:channelId/manifest.mpd", (req, res) => {
 
   const goToURL =
     `${origin}/001/2/ch0000009099000000${channelId}/manifest.mpd` +
-    `?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1`;
+    `?JITPDRMType=Widevine&virtualDomain=001.live_hls.zte.com&m4s_min=1&NeedJITP=1&isjitp=0&startNumber=46489952&filedura=6&ispcode=55&IASHttpSessionId=RR20449520251213154029994744&usersessionid=739449684`;
 
   console.log("➡️ Redirecting to:", goToURL);
 
