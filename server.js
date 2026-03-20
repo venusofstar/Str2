@@ -5,8 +5,8 @@ const PORT = process.env.PORT || 10000;
 
 // 🔥 Direct stream links
 const STREAMS = {
-  tapsilog: "https://dice-live-ap.akamaized.net/hls/live/2001903/300024-317970/playlist.m3u8?hdntl=exp=1774102063~acl=%2f*~id=94ddba5c-374b-45b1-8565-e23172fa4fab~data=hdntl,dWlkPVc5dVJhanxiYjFlZDQ2Ny1hODRhLTQ1Y2EtOGMyNS0wNGI1NmU1NGYzZWEmaXA9MTEyLjIwMS45Ni4xMjYmZXhwPTE3NzQxMDIwOTImZWlkPTIyMDkzOSZjaWQ9ZGNlLnRhcGdvJm9pZD0zMjUmdHlwZT1MSVZF~hmac=6df021647b26cbd87185e9da310868a31740e57d7131d1d922a3ebcd4b115bac",
-  tapsports: "https://dice-live-ap.akamaized.net/hls/live/2102504/220939-318306/playlist.m3u8?hdntl=exp=1774102063~acl=%2f*~id=94ddba5c-374b-45b1-8565-e23172fa4fab~data=hdntl,dWlkPVc5dVJhanxiYjFlZDQ2Ny1hODRhLTQ1Y2EtOGMyNS0wNGI1NmU1NGYzZWEmaXA9MTEyLjIwMS45Ni4xMjYmZXhwPTE3NzQxMDIwOTImZWlkPTIyMDkzOSZjaWQ9ZGNlLnRhcGdvJm9pZD0zMjUmdHlwZT1MSVZF~hmac=6df021647b26cbd87185e9da310868a31740e57d7131d1d922a3ebcd4b115bac"
+  tapsilog: "https://dice-live-ap.akamaized.net/hls/live/2001903/300024-317970/playlist.m3u8?hdntl=exp=1774105625~acl=%2f*~id=e3d0ec19-5c64-48e0-9efb-404240cc6819~data=hdntl,dWlkPVc5dVJhanxiYjFlZDQ2Ny1hODRhLTQ1Y2EtOGMyNS0wNGI1NmU1NGYzZWEmaXA9MTEyLjIwMS45Ni4xMjYmZXhwPTE3NzQxMDU2NTQmZWlkPTMwMDAyNCZjaWQ9ZGNlLnRhcGdvJm9pZD0zMjUmdHlwZT1MSVZF~hmac=934db3e2f174f462a350a0c4096f80a6a70c910e7184f46685dd052c99f80c00",
+  tapsports: "https://dice-live-ap.akamaized.net/hls/live/2102504/220939-318306/playlist.m3u8?hdntl=exp=1774105625~acl=%2f*~id=e3d0ec19-5c64-48e0-9efb-404240cc6819~data=hdntl,dWlkPVc5dVJhanxiYjFlZDQ2Ny1hODRhLTQ1Y2EtOGMyNS0wNGI1NmU1NGYzZWEmaXA9MTEyLjIwMS45Ni4xMjYmZXhwPTE3NzQxMDU2NTQmZWlkPTMwMDAyNCZjaWQ9ZGNlLnRhcGdvJm9pZD0zMjUmdHlwZT1MSVZF~hmac=934db3e2f174f462a350a0c4096f80a6a70c910e7184f46685dd052c99f80c00"
 };
 
 // 🔥 Short URL redirect
