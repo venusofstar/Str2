@@ -21,16 +21,13 @@ app.get("/:id", (req, res) => {
   res.redirect(stream);
 });
 
-// Home page
-app.get("/", (req, res) => {
-  res.send(`
-    <h2>🔥 Short Stream Links</h2>
-    <ul>
-      <li><a href="/m">Main Stream</a></li>
-      <li><a href="/s1">Sports One</a></li>
-    </ul>
-  `);
+// =========================
+// HOME
+// =========================
+app.get("/", (_, res) => {
+  res.send("Enjoy your life");
 });
+
 
 app.listen(PORT, () => {
   console.log("🚀 Server running on port", PORT);
